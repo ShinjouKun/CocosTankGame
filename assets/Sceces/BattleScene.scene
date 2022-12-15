@@ -10,7 +10,7 @@
   },
   {
     "__type__": "cc.Scene",
-    "_name": "scene",
+    "_name": "BattleScene",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -25,7 +25,7 @@
     "_globals": {
       "__id__": 11
     },
-    "_id": "5524fd59-687d-4893-8927-4b9ec7554d56"
+    "_id": "4feda0e0-c5bf-49f1-962f-498326c8118c"
   },
   {
     "__type__": "cc.Node",
@@ -57,7 +57,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 479.99999999999994,
+      "x": 480,
       "y": 320.00000000000006,
       "z": 0
     },
@@ -171,7 +171,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "StageTestBackGroundImage",
+    "_name": "BackGround",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -213,7 +213,7 @@
       "y": 0,
       "z": 0
     },
-    "_id": "6bIuSt2bBJdJe5a9nPBQ+r"
+    "_id": "aeOsJ0Y/pL+pwsoP6W/Hbn"
   },
   {
     "__type__": "cc.UITransform",
@@ -227,14 +227,14 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 40,
-      "height": 40
+      "height": 36
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0.5,
       "y": 0.5
     },
-    "_id": "b62dK+SWVILplppjxxE5H9"
+    "_id": "0fhpq5O3pGyo4WYlcsgxcf"
   },
   {
     "__type__": "cc.Sprite",
@@ -250,13 +250,13 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 160,
-      "g": 88,
-      "b": 91,
+      "r": 11,
+      "g": 243,
+      "b": 2,
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+      "__uuid__": "57520716-48c8-4a19-8acf-41c9f8777fb0@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -272,7 +272,7 @@
     "_isTrimmedMode": true,
     "_useGrayscale": false,
     "_atlas": null,
-    "_id": "32DyN8BPxGforE99z6eCm9"
+    "_id": "002gtDBOxGFZgCXP7TbYD2"
   },
   {
     "__type__": "cc.UITransform",
@@ -321,8 +321,8 @@
     "__prefab": null,
     "_alignFlags": 45,
     "_target": null,
-    "_left": -5.684341886080802e-14,
-    "_right": -5.684341886080802e-14,
+    "_left": 0,
+    "_right": 0,
     "_top": 5.684341886080802e-14,
     "_bottom": 5.684341886080802e-14,
     "_horizontalCenter": 0,
