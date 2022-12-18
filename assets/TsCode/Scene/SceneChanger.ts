@@ -5,19 +5,34 @@ const { ccclass, property } = _decorator;
 //シーン切り替えクラス
 export class SceneChanger extends Component {
 
-    start() {
+    start() 
+    {
+        //キー入力イベントのセット
         input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
     }
+
+
 
     update(deltaTime: number) {
       
     }
     onKeyDown(event:EventKeyboard)
     {
-        if(KeyCode.KEY_A)
+        //switch文じゃないと動かない仕様らしい
+        switch(event.keyCode)
         {
-            director.loadScene("BattleScene");
+            case KeyCode.NUM_1:
+                director.loadScene("BattleScene");
+                break;
+            case KeyCode.NUM_2:
+                director.loadScene("TestScene");
+                break;
         }
+    }
+    onDestroy () 
+    {
+        //キー入力イベントの削除
+        input.off(Input.EventType.KEY_DOWN, this.onKeyDown, this);
     }
     
 
