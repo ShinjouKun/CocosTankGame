@@ -5,7 +5,7 @@ const { ccclass, property } = _decorator;
 export class MisaileBase extends Component 
 {
     @property
-    _moveSpeed:number = 20;
+    _moveSpeed:number = 1000;
     _rotateSpeed:number = 1.0;
     _moveFlagFront:boolean = false;//移動操作を受け付けている間trueになる
     _moveFlagLeft:boolean = false;//移動操作を受け付けている間trueになる
@@ -24,7 +24,7 @@ export class MisaileBase extends Component
 
     misaileMoveing(deltaTime)
     {
-       let veocity = new Vec2(0,0);
+       let velcity = new Vec2(0,0);
        let currentAngle = this.node.eulerAngles.z;
 
       if(this._moveFlagLeft)
@@ -39,10 +39,13 @@ export class MisaileBase extends Component
       }
       if(this._moveFlagFront)
       {
-         veocity = this.yaw(currentAngle - 90);
+        velcity = this.yaw(currentAngle - 90);
+        velcity.x = (velcity.x * this._moveSpeed)*deltaTime;
+        velcity.y = (velcity.y * this._moveSpeed)*deltaTime;
       }
 
-       this.node.setPosition(this.node.position.x - veocity.x,this.node.position.y + veocity.y,0);
+
+       this.node.setPosition(this.node.position.x - velcity.x,this.node.position.y + velcity.y,0);
      
     }
 
