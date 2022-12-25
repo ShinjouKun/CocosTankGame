@@ -5,7 +5,7 @@ const { ccclass, property } = _decorator;
 export class MisaileBase extends Component 
 {
     @property
-    _moveSpeed:number = 1000;
+    _moveSpeed:number = 50;
     _rotateSpeed:number = 1.0;
     _moveFlagFront:boolean = false;//移動操作を受け付けている間trueになる
     _moveFlagLeft:boolean = false;//移動操作を受け付けている間trueになる

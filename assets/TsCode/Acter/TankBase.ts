@@ -1,22 +1,159 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, Vec2 ,input, Input, KeyCode, director, SystemEvent, macro, EventKeyboard, Prefab } from 'cc';
 const { ccclass, property } = _decorator;
-
-//戦車の操作タイプ
-enum TankOperationType
-{
-    PLAYER,
-    AI,
-}
 //戦車の基礎クラス
 @ccclass('TankBase')
 export class TankBase extends Component {
-
-    start() {
-
+   
+    _hp:number = 100;
+    _moveSpeed:number = 50;
+    _rotateSpeed:number = 1;
+    //操作を受け付けている間trueになる
+    _moveFlagBack:boolean = false;
+    _moveFlagFront:boolean = false;
+    _moveFlagLeft:boolean = false;
+    _moveFlagRight:boolean = false;
+    _rotateAttackLeft:boolean = false;
+    _rotateAttackRight:boolean = false;
+    @property({type:Node})
+    tankAttack:Node = null;//砲塔
+    @property({type:Node})
+    tankBottom:Node = null;//車体
+    start() 
+    {
+        //キー入力イベントのセット
+        input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
+        input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
     }
 
-    update(deltaTime: number) {
-        
+    update(deltaTime: number) 
+    {
+        this.tankAttckMove(deltaTime);
+        this.tankBottomMove(deltaTime);
+    }
+
+    tankAttckMove(deltaTime: number)
+    {
+        let currentAngle = this.tankAttack.eulerAngles.z;
+ 
+        if(this._rotateAttackLeft)
+        {
+            this._rotateSpeed * deltaTime;
+            currentAngle = currentAngle + this._rotateSpeed;
+            this.tankAttack.setRotationFromEuler(0,0,currentAngle);
+
+        }
+        if(this._rotateAttackRight)
+        {
+            this._rotateSpeed * deltaTime;
+            currentAngle = currentAngle - this._rotateSpeed;
+            this.tankAttack.setRotationFromEuler(0,0,currentAngle);
+        }
+    }
+
+    //移動操作系
+    tankBottomMove(deltaTime: number)
+    {
+        let velcity = new Vec2(0,0);
+        let currentAngle = this.tankBottom.eulerAngles.z;
+ 
+       if(this._moveFlagLeft)
+       {
+         this._rotateSpeed * deltaTime;
+         currentAngle = currentAngle + this._rotateSpeed;
+         this.tankBottom.setRotationFromEuler(0,0,currentAngle);
+       }
+       if(this._moveFlagRight)
+       {
+         this._rotateSpeed * deltaTime;
+         currentAngle = currentAngle - this._rotateSpeed;
+         this.tankBottom.setRotationFromEuler(0,0,currentAngle);
+       }
+       if(this._moveFlagFront)
+       {
+         velcity = this.yaw(currentAngle - 90);
+         velcity.x = (velcity.x * this._moveSpeed)*deltaTime;
+         velcity.y = (velcity.y * this._moveSpeed)*deltaTime;
+       }
+       if(this._moveFlagBack)
+       {
+         velcity = this.yaw(currentAngle - 90);
+         velcity.x = (-velcity.x * this._moveSpeed)*deltaTime;
+         velcity.y = (-velcity.y * this._moveSpeed)*deltaTime;
+       }
+
+        this.node.setPosition(this.node.position.x - velcity.x,this.node.position.y + velcity.y,0);
+    }
+
+    onKeyDown(event:EventKeyboard)
+    {
+        switch(event.keyCode)
+        {
+            case KeyCode.KEY_W:
+                this._moveFlagFront = true;
+                break;
+            case KeyCode.KEY_A:
+                this._moveFlagLeft = true;
+                break;
+            case KeyCode.KEY_D:
+                this._moveFlagRight = true;
+                break;
+            case KeyCode.KEY_S:
+                this._moveFlagBack = true;
+                break;
+            case KeyCode.ARROW_LEFT:
+                this._rotateAttackLeft = true;
+                break;
+            case KeyCode.ARROW_RIGHT:
+                this._rotateAttackRight = true;
+        }
+    }
+
+    onKeyUp(event:EventKeyboard)
+    {
+        switch(event.keyCode)
+        {
+            case KeyCode.KEY_W:
+                this._moveFlagFront = false;
+                break;
+            case KeyCode.KEY_A:
+                this._moveFlagLeft = false;
+                break;
+            case KeyCode.KEY_D:
+                this._moveFlagRight = false;
+                break;
+            case KeyCode.KEY_S:
+                this._moveFlagBack = false;
+                break;
+            case KeyCode.ARROW_LEFT:
+                this._rotateAttackLeft = false;
+                break;
+            case KeyCode.ARROW_RIGHT:
+                this._rotateAttackRight = false;
+        }
+    }
+
+     //回転移動計算
+     yaw(ang)
+     {
+         ang = ang + 45;
+         ang = ang *Math.PI /180;
+ 
+         let sin = Math.sin(ang);
+         let cos = Math.cos(ang);
+ 
+         let x = cos + sin;
+         let y = -(sin) + cos;
+ 
+         let v = new Vec2(x,y);
+ 
+         return v;
+     }
+
+    onDestroy () 
+    {
+        //キー入力イベントの削除
+        input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
+        input.off(Input.EventType.KEY_UP, this.onKeyUp, this);
     }
 }
 
