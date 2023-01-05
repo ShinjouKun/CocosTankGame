@@ -37,7 +37,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 0,
+      "y": -1,
       "z": 0
     },
     "_lrot": {
@@ -129,7 +129,7 @@
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0.5,
-      "y": 0.5
+      "y": 0.55
     },
     "_id": ""
   },
@@ -214,7 +214,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 4,
+      "y": 0,
       "z": 0
     },
     "_lrot": {
@@ -336,6 +336,10 @@
     },
     "tankBottom": {
       "__id__": 2
+    },
+    "bullet": {
+      "__uuid__": "7ae0934d-8b08-46f6-b834-0000edea1f23",
+      "__expectedType__": "cc.Prefab"
     },
     "_id": ""
   },

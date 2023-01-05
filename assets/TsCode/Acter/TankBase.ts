@@ -1,4 +1,5 @@
-import { _decorator, Component, Node, Vec2 ,input, Input, KeyCode, director, SystemEvent, macro, EventKeyboard, Prefab } from 'cc';
+import { _decorator, Component, Node, Vec2 ,input, Input, KeyCode, director, SystemEvent, macro, EventKeyboard, Prefab, instantiate, Scene } from 'cc';
+import { Bullet } from './Bullet';
 const { ccclass, property } = _decorator;
 //戦車の基礎クラス
 @ccclass('TankBase')
@@ -7,6 +8,7 @@ export class TankBase extends Component {
     _hp:number = 100;
     _moveSpeed:number = 50;
     _rotateSpeed:number = 1;
+    _bulletAngle:number = 0;
     //操作を受け付けている間trueになる
     _moveFlagBack:boolean = false;
     _moveFlagFront:boolean = false;
@@ -14,12 +16,21 @@ export class TankBase extends Component {
     _moveFlagRight:boolean = false;
     _rotateAttackLeft:boolean = false;
     _rotateAttackRight:boolean = false;
+
+    //カンバス
+    _rendCanvas:Node = null;
     @property({type:Node})
     tankAttack:Node = null;//砲塔
     @property({type:Node})
     tankBottom:Node = null;//車体
+
+    @property({type:Prefab})
+    bullet:Prefab = null;//弾
     start() 
     {
+        //弾を生成したりするためにCanvasノードを登録
+        let scene = director.getScene();
+        this._rendCanvas = scene.getChildByName("Canvas");
         //キー入力イベントのセット
         input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
         input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
@@ -38,15 +49,14 @@ export class TankBase extends Component {
         if(this._rotateAttackLeft)
         {
             this._rotateSpeed * deltaTime;
-            currentAngle = currentAngle + this._rotateSpeed;
-            this.tankAttack.setRotationFromEuler(0,0,currentAngle);
-
+            this._bulletAngle = currentAngle + this._rotateSpeed;
+            this.tankAttack.setRotationFromEuler(0,0,this._bulletAngle);
         }
         if(this._rotateAttackRight)
         {
             this._rotateSpeed * deltaTime;
-            currentAngle = currentAngle - this._rotateSpeed;
-            this.tankAttack.setRotationFromEuler(0,0,currentAngle);
+            this._bulletAngle = currentAngle - this._rotateSpeed;
+            this.tankAttack.setRotationFromEuler(0,0,this._bulletAngle);
         }
     }
 
@@ -105,6 +115,17 @@ export class TankBase extends Component {
                 break;
             case KeyCode.ARROW_RIGHT:
                 this._rotateAttackRight = true;
+                break;
+            case KeyCode.ARROW_UP:
+                //弾を生成
+               
+                let b =  instantiate(this.bullet);
+                let y = this.yaw(this._bulletAngle - 90);
+                b.setPosition(this.node.position.x - 20 * y.x,this.node.position.y + 20 * y.y ,0);
+                b.setRotationFromEuler(0,0,this._bulletAngle);
+                this._rendCanvas.addChild(b);
+             
+                break;
         }
     }
 
