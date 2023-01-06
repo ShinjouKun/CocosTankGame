@@ -4,7 +4,7 @@ const { ccclass, property } = _decorator;
 //戦車の基礎クラス
 @ccclass('TankBase')
 export class TankBase extends Component {
-   
+    ATTAKCK_ROTATE_OFFSET:number = 20;
     _hp:number = 100;
     _moveSpeed:number = 50;
     _rotateSpeed:number = 1;
@@ -16,6 +16,8 @@ export class TankBase extends Component {
     _moveFlagRight:boolean = false;
     _rotateAttackLeft:boolean = false;
     _rotateAttackRight:boolean = false;
+    //射撃制御
+    _shotFlag:boolean = true;//開始時点で発射可能状態
 
     //カンバス
     _rendCanvas:Node = null;
@@ -23,9 +25,9 @@ export class TankBase extends Component {
     tankAttack:Node = null;//砲塔
     @property({type:Node})
     tankBottom:Node = null;//車体
-
     @property({type:Prefab})
     bullet:Prefab = null;//弾
+
     start() 
     {
         //弾を生成したりするためにCanvasノードを登録
@@ -40,8 +42,14 @@ export class TankBase extends Component {
     {
         this.tankAttckMove(deltaTime);
         this.tankBottomMove(deltaTime);
+        
+        if(!this._shotFlag)
+        {
+            this.scheduleOnce(function(){ console.log("リロード完了"), this._shotFlag = true},3);
+        }
+      
     }
-
+    //砲塔回転
     tankAttckMove(deltaTime: number)
     {
         let currentAngle = this.tankAttack.eulerAngles.z;
@@ -60,7 +68,7 @@ export class TankBase extends Component {
         }
     }
 
-    //移動操作系
+    //移動操作
     tankBottomMove(deltaTime: number)
     {
         let velcity = new Vec2(0,0);
@@ -93,6 +101,18 @@ export class TankBase extends Component {
 
         this.node.setPosition(this.node.position.x - velcity.x,this.node.position.y + velcity.y,0);
     }
+    //砲撃
+    shot()
+    {
+         //弾を生成
+         let b =  instantiate(this.bullet);
+         let bulletYaw = this.yaw(this._bulletAngle - 90);
+         b.setPosition(this.node.position.x - this.ATTAKCK_ROTATE_OFFSET * bulletYaw.x,this.node.position.y + this.ATTAKCK_ROTATE_OFFSET * bulletYaw.y ,0);
+         b.setRotationFromEuler(0,0,this._bulletAngle);
+         //シーンノード直下のCanvasに描画させる
+         this._rendCanvas.addChild(b);
+         this._shotFlag = false;
+    }
 
     onKeyDown(event:EventKeyboard)
     {
@@ -117,14 +137,10 @@ export class TankBase extends Component {
                 this._rotateAttackRight = true;
                 break;
             case KeyCode.ARROW_UP:
-                //弾を生成
-               
-                let b =  instantiate(this.bullet);
-                let y = this.yaw(this._bulletAngle - 90);
-                b.setPosition(this.node.position.x - 20 * y.x,this.node.position.y + 20 * y.y ,0);
-                b.setRotationFromEuler(0,0,this._bulletAngle);
-                this._rendCanvas.addChild(b);
-             
+                if(this._shotFlag)
+                {
+                  this.shot();
+                }
                 break;
         }
     }
