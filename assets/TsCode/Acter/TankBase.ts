@@ -42,12 +42,6 @@ export class TankBase extends Component {
     {
         this.tankAttckMove(deltaTime);
         this.tankBottomMove(deltaTime);
-        
-        if(!this._shotFlag)
-        {
-            this.scheduleOnce(function(){ console.log("リロード完了"), this._shotFlag = true},3);
-        }
-      
     }
     //砲塔回転
     tankAttckMove(deltaTime: number)
@@ -105,13 +99,16 @@ export class TankBase extends Component {
     shot()
     {
          //弾を生成
+         this._shotFlag = false;
          let b =  instantiate(this.bullet);
          let bulletYaw = this.yaw(this._bulletAngle - 90);
          b.setPosition(this.node.position.x - this.ATTAKCK_ROTATE_OFFSET * bulletYaw.x,this.node.position.y + this.ATTAKCK_ROTATE_OFFSET * bulletYaw.y ,0);
          b.setRotationFromEuler(0,0,this._bulletAngle);
          //シーンノード直下のCanvasに描画させる
          this._rendCanvas.addChild(b);
-         this._shotFlag = false;
+         //発射感覚を設定
+         this.scheduleOnce(function(){ console.log("リロード完了"), this._shotFlag = true},1);
+        
     }
 
     onKeyDown(event:EventKeyboard)
